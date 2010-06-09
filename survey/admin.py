@@ -7,9 +7,29 @@ from iu_proj.survey.models import Branches
 
 from django.contrib import admin
 
-admin.site.register(Choices)
-admin.site.register(Questions)
-admin.site.register(Modules)
-admin.site.register(Surveys)
-admin.site.register(Branches)
-admin.site.register(ChoiceCategories)
+class SurveysAdmin(admin.ModelAdmin):
+    fieldsets = [
+        ('Basic Info', {'fields': ['name']}),
+        ('Other Info', {'fields' : ['description', 'branches', 'modules']}),
+        ]
+    
+class ModulesAdmin(admin.ModelAdmin):
+    fieldsets = [
+        ('Basic Info', {'fields': ['name']}),
+        ('Other Info', {'fields' : ['description', 'questions']}),
+        ]    
+
+class ChoicesInline(admin.TabularInline):
+    model = Choices
+    extra = 4
+
+class QuestionsAdmin(admin.ModelAdmin):
+    fieldsets = [
+        ('Basic Info', {'fields': ['content']}),
+    ]
+    inlines = [ChoicesInline]
+    
+admin.site.register(Questions, QuestionsAdmin)
+admin.site.register(Modules, ModulesAdmin)
+admin.site.register(Surveys, SurveysAdmin)
+
